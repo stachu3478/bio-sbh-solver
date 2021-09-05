@@ -46,14 +46,6 @@ class Greedy(Base):
 
 
   def sbh_negative(self, n, graph, root, visited=[], visited_count=0):
-      if n < graph.vertex_count() - visited_count:
-          if visited_count > self.max_o:
-              self.max_o = visited_count
-              print(visited_count, graph.vertex_count(), sum(visited), n)
-          if self.max_o == 244:
-              return []
-          return
-
       if n == 0:
           return []
 

@@ -1,3 +1,4 @@
+from pathlib import Path
 import random
 
 
@@ -7,6 +8,8 @@ def random_sequence(length):
 
 class SbhInstance:
     def create_series_into_folder(self, base_path):
+        if base_path != "":
+            self._create_dir_if_not_exists(base_path)
         for n in [300, 500, 750, 1000]:
             for k in [7, 8, 9, 10]:
                 for pe in [0, 0.04, 0.08, 0.12]:
@@ -90,8 +93,13 @@ class SbhInstance:
         f.write('\n'.join(self.spectrum))
         f.close()
 
+    def _create_dir_if_not_exists(self, path):
+        Path(path).mkdir(parents=True, exist_ok=True)
+
 
 SbhInstance.create_series_into_folder = classmethod(
     SbhInstance.create_series_into_folder)
 SbhInstance.read = classmethod(
     SbhInstance.read)
+SbhInstance._create_dir_if_not_exists = classmethod(
+    SbhInstance._create_dir_if_not_exists)

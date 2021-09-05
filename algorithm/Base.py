@@ -17,6 +17,13 @@ initial_oligo : string
   wiedzieliśmy od czego startujemy, wynika to z innych cech eksperymentu hybrydyzacyjnego).
 """
 class Base:
+  def __init__(self):
+    self.n = None
+    self.k = None
+    self.spectrum = []
+    self.errors = ''
+    self.initial_oligo = ''
+
   def validate(self):
     if self.n < self.k:
         raise Exception(
@@ -31,12 +38,12 @@ class Base:
     if self.initial_oligo not in self.spectrum:
         self.spectrum.append(self.initial_oligo)
 
-  def reconstruct(initial_oligo, spectrum, spectrum_order):
-    reconstructed = initial_oligo
+  def reconstruct(self, spectrum_order):
+    reconstructed = self.initial_oligo
     if spectrum_order is not None:
         for _, connection in enumerate(spectrum_order):
             reconstructed = reconstructed + \
-                spectrum[connection[0]][-connection[1]:]
+                self.spectrum[connection[0]][-connection[1]:]
     return reconstructed
 
   def solve(self):
