@@ -1,3 +1,5 @@
+from utils.LevenshteinDistance import LevenshteinDistance
+
 """
 ALGORYTM MA NASTĘPUJĄCE DANE WEJŚCIOWE:
 
@@ -55,7 +57,14 @@ class Base:
     """
     self.validate()
     spectrum_order = self.spectrum_order()
-    return self.reconstruct(spectrum_order)
+    self.result = self.reconstruct(spectrum_order)
+    return self.result
+
+  def rate(self, sequence):
+    string_distance = LevenshteinDistance.compute(None, self.result, sequence)
+    max_distance = max(len(self.result), len(sequence))
+    similarity = 100 * (1. - float(string_distance) / float(max_distance))
+    print("Similarity: " + str(round(similarity, 2)) + "% (Levenshstein distance: " + str(string_distance) + ")")
 
   def spectrum_order(self):
     """
