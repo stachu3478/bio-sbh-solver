@@ -16,15 +16,15 @@ class LevenshteinDistance:
         for x in range(m + 1):
             d[x][0] = x
 
-        for i in range(1, n + 1):
-            for j in range(1, m + 1):
+        for i in range(1, m + 1):
+            for j in range(1, n + 1):
                 cost = 0
-                if (string2[j - 1] != string1[i - 1]):
+                if (string2[i - 1] != string1[j - 1]):
                     cost = 1
                 min1 = d[i - 1][j] + 1
                 min2 = d[i][j - 1] + 1
                 min3 = d[i - 1][j - 1] + cost
                 d[i][j] = min(min1, min2, min3)
-        return d[n][m]
+        return d[m][n]
 
 LevenshteinDistance.compute = staticmethod(LevenshteinDistance.compute)

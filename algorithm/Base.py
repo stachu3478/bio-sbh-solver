@@ -26,6 +26,22 @@ class Base:
     self.errors = ''
     self.initial_oligo = ''
 
+  def from_instance(self, instance):
+    solver = self()
+    solver.n = instance.length
+    solver.k = instance.oligo_length
+    solver.spectrum = instance.spectrum
+    if instance.positive_errors and instance.negative_errors:
+          solver.errors = 'all'
+    elif instance.positive_errors:
+          solver.errors = 'positive'
+    elif instance.negative_errors:
+          solver.errors = 'negative'
+    else:
+          solver.errors = 'none'
+    solver.initial_oligo = instance.initial_oligo
+    return solver
+
   def validate(self):
     if self.n < self.k:
         raise Exception(
@@ -74,3 +90,5 @@ class Base:
       Złożone potencjalne DNA
     """
     raise NotImplementedError
+
+Base.from_instance = classmethod(Base.from_instance)
