@@ -1,5 +1,3 @@
-from utils.LevenshteinDistance import LevenshteinDistance
-
 """
 ALGORYTM MA NASTĘPUJĄCE DANE WEJŚCIOWE:
 
@@ -26,61 +24,11 @@ class Base:
     self.errors = ''
     self.initial_oligo = ''
 
-  def from_instance(self, instance):
-    solver = self()
-    solver.n = instance.length
-    solver.k = instance.oligo_length
-    solver.spectrum = instance.spectrum
-    if instance.positive_errors and instance.negative_errors:
-          solver.errors = 'all'
-    elif instance.positive_errors:
-          solver.errors = 'positive'
-    elif instance.negative_errors:
-          solver.errors = 'negative'
-    else:
-          solver.errors = 'none'
-    solver.initial_oligo = instance.initial_oligo
-    return solver
+  def has_negative_errors(self):
+    return self.errors == 'negative' or self.errors == 'all'
 
-  def validate(self):
-    if self.n < self.k:
-        raise Exception(
-            'Długość dna jest krótsza niż długość oligonukleotydu!')
-    if self.errors not in ('none', 'negative', 'positive', 'all'):
-        raise Exception('Nieznany typ błędu!')
-    if self.k != len(self.initial_oligo):
-        raise Exception('Zła długość początkowego oligonukleotydu!')
-    for oligo in self.spectrum:
-        if self.k != len(oligo):
-            raise Exception('Zła długość oligonukleotydu w spektrum!')
-    if self.initial_oligo not in self.spectrum:
-        self.spectrum.append(self.initial_oligo)
-
-  def reconstruct(self, spectrum_order):
-    reconstructed = self.initial_oligo
-    if spectrum_order is not None:
-        for _, connection in enumerate(spectrum_order):
-            reconstructed = reconstructed + \
-                self.spectrum[connection[0]][-connection[1]:]
-    return reconstructed
-
-  def solve(self):
-    """
-    Returns
-    -------
-    string
-      Złożone potencjalne DNA
-    """
-    self.validate()
-    spectrum_order = self.spectrum_order()
-    self.result = self.reconstruct(spectrum_order)
-    return self.result
-
-  def rate(self, sequence):
-    string_distance = LevenshteinDistance.compute(None, self.result, sequence)
-    max_distance = max(len(self.result), len(sequence))
-    similarity = 100 * (1. - float(string_distance) / float(max_distance))
-    print("Similarity: " + str(round(similarity, 2)) + "% (Levenshstein distance: " + str(string_distance) + ")")
+  def before_run(self):
+    self.root = self.spectrum.index(self.initial_oligo)
 
   def spectrum_order(self):
     """
@@ -90,5 +38,3 @@ class Base:
       Złożone potencjalne DNA
     """
     raise NotImplementedError
-
-Base.from_instance = classmethod(Base.from_instance)
