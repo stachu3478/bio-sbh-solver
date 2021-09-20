@@ -19,6 +19,8 @@ class DirectedGraph:
         return graph  # .freeze()
 
     def __init__(self, size, max_weight):
+        self.max_weight = max_weight
+        self.size = size
         self.vertex_edges_by_weight = [[[] for _ in range(max_weight + 1)] for _ in range(size)]
         self.vertex_edges = [[] for _ in range(size)]
         self.vertex_degree_by_weight = [[0 for _ in range(max_weight + 1)] for _ in range(size)]
