@@ -37,4 +37,4 @@ class Base:
     string
       Złożone potencjalne DNA
     """
-    raise NotImplementedError
+    raise NotImplementedError('Abstract!')

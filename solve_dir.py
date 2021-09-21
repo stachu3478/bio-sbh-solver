@@ -4,16 +4,17 @@
 from pathlib import Path
 
 import sys
-from utils.algorithm_helper import choose_algorithm
+from Solver import Solver
 from generator import SbhInstance
 
 if len(sys.argv) < 2:
       print('Podaj nazwę folderu z instancjami do rozwiązania.')
       exit(1)
-Algorithm = choose_algorithm()
+algorithm_name = None
 if len(sys.argv) > 2:
-      Algorithm = choose_algorithm(sys.argv[2])
+      algorithm_name = sys.argv[2]
 
+solver = Solver()
 instances = 0
 perfect_runs = []
 sum = 0.0
@@ -21,7 +22,7 @@ worst_case = { 'path': None, 'similarity': 100.0 }
 instance_dir_path = sys.argv[1] # 'instances'
 for instance_path in Path(instance_dir_path).iterdir():
     instance = SbhInstance.read(instance_path)
-    solver = Algorithm.from_instance(instance)
+    solver.read_from_instance(instance, algorithm_name=algorithm_name)
     print(instance_path)
     solver.solve()
     instances += 1

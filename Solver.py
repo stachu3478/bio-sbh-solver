@@ -1,5 +1,7 @@
 from utils.LevenshteinDistance import LevenshteinDistance
-from algorithm.Greedy import Greedy
+from algorithm.GreedyLeastWeight import GreedyLeastWeight
+from algorithm.GreedyHighestWeight import GreedyHighestWeight
+from algorithm.GreedyRandomWeight import GreedyRandomWeight
 from algorithm.Ant import Ant
 
 class Solver:
@@ -63,8 +65,12 @@ class Solver:
     return similarity
 
   def choose_algorithm(self, name = 'Greedy'):
-    if name == 'Greedy':
-        return Greedy
+    if name == 'Greedy' or name == 'GreedyLeastWeight':
+        return GreedyLeastWeight
+    elif name == 'GreedyHighestWeight':
+        return GreedyHighestWeight
+    elif name == 'GreedyRandomWeight':
+        return GreedyRandomWeight
     elif name == 'Ant':
         return Ant
     else:

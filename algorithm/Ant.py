@@ -1,19 +1,19 @@
 import random
-from algorithm.Greedy import Greedy
+from algorithm.GreedyLeastWeight import GreedyLeastWeight
 from graph import DirectedGraph
 from algorithm.ant.NegativeErrorDependent import NegativeErrorDependent
 from algorithm.ant.NonNegativeErrorDependent import NonNegativeErrorDependent
 
-class Ant(Greedy):
+class Ant(GreedyLeastWeight):
   def __init__(self) -> None:
       super().__init__()
       # tuning variables
       self.ant_count = 100
       self.feromon_half_vapor_time = 2
-      self.min_feromon = 0.00001
+      self.min_feromon = 1.0 # 0.00001
       self.max_feromon = 1.0
       self.feromon_generated_at_not_worse_result_rte = 0
-      self.starvation_cycles = 5
+      self.starvation_cycles = 1 # 5
 
       self.vertex_degree_weight = 1.0
       self.chain_length_weight = 1.0
@@ -68,10 +68,11 @@ class Ant(Greedy):
         if valid:
           spectrum_orders.append(spectrum_order)
     self.vaporate_feromon()
+    print('SUccessful matches: ', len(spectrum_orders))
     for _, spectrum_order in enumerate(spectrum_orders):
       quality = self.quality(spectrum_order)
       # print(spectrum_order)
-      # print('Quality: ' + str(quality))
+      print('Quality: ' + str(quality))
       if quality > self.max_quality:
           self.starvation_level = 0
           self.max_quality = quality
