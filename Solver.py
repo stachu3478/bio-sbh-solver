@@ -56,12 +56,13 @@ class Solver:
     self.result = self.reconstruct(spectrum_order)
     return self.result
 
-  def rate(self, sequence):
+  def rate(self, sequence, debug=True):
     string_distance = LevenshteinDistance.compute(None, self.result, sequence)
     max_distance = max(len(self.result), len(sequence))
     similarity = 100 * (1. - float(string_distance) / float(max_distance))
     similarity = round(similarity, 2)
-    print("Similarity: " + str(similarity) + "% (Levenshstein distance: " + str(string_distance) + ")")
+    if debug:
+      print("Similarity: " + str(similarity) + "% (Levenshstein distance: " + str(string_distance) + ")")
     return similarity
 
   def choose_algorithm(self, name = 'Greedy'):

@@ -133,3 +133,4 @@ dmypy.json
 
 # problem instances
 instances
+*.txt

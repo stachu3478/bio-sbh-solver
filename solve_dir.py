@@ -26,7 +26,7 @@ for instance_path in Path(instance_dir_path).iterdir():
     print(instance_path)
     solver.solve()
     instances += 1
-    similarity = solver.rate(instance.sequence)
+    similarity = solver.rate(instance.sequence, debug=False)
     sum += similarity
     if similarity == 100.0:
           perfect_runs.append(instance_path)

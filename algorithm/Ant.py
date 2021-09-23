@@ -4,16 +4,18 @@ from graph import DirectedGraph
 from algorithm.ant.NegativeErrorDependent import NegativeErrorDependent
 from algorithm.ant.NonNegativeErrorDependent import NonNegativeErrorDependent
 
+class NoChildrenError(RuntimeError):
+  pass
+
 class Ant(GreedyLeastWeight):
   def __init__(self) -> None:
       super().__init__()
       # tuning variables
-      self.ant_count = 100
-      self.feromon_half_vapor_time = 2
-      self.min_feromon = 1.0 # 0.00001
-      self.max_feromon = 1.0
-      self.feromon_generated_at_not_worse_result_rte = 0
-      self.starvation_cycles = 1 # 5
+      self.ant_count = 1000
+      self.feromon_half_vapor_time = 0.375
+      self.min_feromon = 0.000001 # 0.00001
+      self.max_feromon = 10000.0
+      self.starvation_cycles = 10 # 5
 
       self.vertex_degree_weight = 1.0
       self.chain_length_weight = 1.0
@@ -22,6 +24,7 @@ class Ant(GreedyLeastWeight):
       # other variables
       self.starvation_level = 0
       self.feromon_vapor_rate = 0.5 ** (1 / self.feromon_half_vapor_time)
+      self.total_cycles = 0
 
   def before_run(self):
       super().before_run()
@@ -36,16 +39,18 @@ class Ant(GreedyLeastWeight):
     Override
     """
     spectrum_order = super().spectrum_order()
-    print(spectrum_order)
     self.max_quality = self.quality(spectrum_order)
     self.order_list = [i for i in range(len(self.spectrum))]
     self.best_path = spectrum_order
     self.feromon = self.error_dependent.create_feromon_table(self.spectrum)
    
-    print('Found greedy quality: ' + str(self.max_quality))
+    # print('Found greedy quality: ' + str(self.max_quality))
     self.apply_feromon(spectrum_order, self.quality_to_applied_feromon(self.quality(spectrum_order)))
     while self.starvation_level < self.starvation_cycles:
         self.cycle()
+        self.total_cycles += 1
+    # print('Total cycles: ' + str(self.total_cycles))
+    print('Best quality: ' + str(self.max_quality))
     return self.best_path
 
 
@@ -68,35 +73,45 @@ class Ant(GreedyLeastWeight):
         if valid:
           spectrum_orders.append(spectrum_order)
     self.vaporate_feromon()
-    print('SUccessful matches: ', len(spectrum_orders))
+    # print('SUccessful matches: ', len(spectrum_orders))
     for _, spectrum_order in enumerate(spectrum_orders):
       quality = self.quality(spectrum_order)
       # print(spectrum_order)
-      print('Quality: ' + str(quality))
+      # print('Quality: ' + str(quality))
+      if quality >= self.max_quality:
+        self.apply_feromon(spectrum_order, self.quality_to_applied_feromon(quality))
       if quality > self.max_quality:
-          self.starvation_level = 0
           self.max_quality = quality
           self.best_path = spectrum_order
-          self.apply_feromon(spectrum_order, self.quality_to_applied_feromon(quality))
-          print('Found better quality: ' + str(quality))
+          
+          self.starvation_level = 0
+          
+          # print('Found better quality: ' + str(quality))
         
   def quality_to_applied_feromon(self, quality):
-    return quality * (self.max_feromon - self.min_feromon)
+    return quality # * (self.max_feromon - self.min_feromon)
 
   def walk(self):
     n = self.n - self.k
     current_vertex = (self.root, 0)
     spectrum_order = []
     while n > 0:
-      next_vertex, weight = self.next_vertex(current_vertex[0])
+      try:
+        next_vertex, weight = self.next_vertex(current_vertex[0])
+      except NoChildrenError:
+        return [], False
       spectrum_order.append((next_vertex, weight))
       n = n - weight
       current_vertex = (next_vertex, weight)
+      
+      
     return spectrum_order, n == 0
 
   def next_vertex(self, current_vertex):
     available_next = self.error_dependent.feromon_index_weight_list[current_vertex]
     weights = self.error_dependent.feromon_index_random_weight_list[current_vertex]
+    if len(available_next) == 0:
+      raise NoChildrenError('No children in selected vertex')
     index_weight = random.choices(available_next, weights=weights, k=1)[0]
     return index_weight[0], index_weight[1]
 
