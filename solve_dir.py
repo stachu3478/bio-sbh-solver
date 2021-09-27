@@ -10,7 +10,7 @@ from generator import SbhInstance
 if len(sys.argv) < 2:
       print('Podaj nazwę folderu z instancjami do rozwiązania.')
       exit(1)
-algorithm_name = None
+algorithm_name = 'Greedy'
 if len(sys.argv) > 2:
       algorithm_name = sys.argv[2]
 

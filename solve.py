@@ -8,7 +8,7 @@ from generator import SbhInstance
 if len(sys.argv) < 2:
       print('Podaj nazwę pliku z instancją do rozwiązania.')
       exit(1)
-algorithm_name = None
+algorithm_name = 'Greedy'
 if len(sys.argv) > 2:
       algorithm_name = sys.argv[2]
 instance_path = sys.argv[1] # 'instances/n300k7pe0ne0.04.txt'

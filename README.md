@@ -13,7 +13,7 @@ Program rozwiązuje problemy w oparciu o plik we własnym formacie, który możn
 
 ### Generowanie instancji problemu
 
-Do wygenerowania folderu z instancjami służy komenda wywowała w folderze projektu:
+Do wygenerowania folderu z instancjami służy komenda wywołana w folderze projektu:
 
 ```Bash
 python ./generate.py <folder z instancjami> [baza DNA]
@@ -31,7 +31,7 @@ W przypadku podania niewłaściwych argumentów wyświetlenie informacji o błę
 
 ### Uruchamianie algorytmu na pojedyńczym pliku z instancją
 
-Do uruchomienia algorytmu dla pojedyńczego pliku służy komenda wywowała w folderze projektu:
+Do uruchomienia algorytmu dla pojedyńczego pliku służy komenda wywołana w folderze projektu:
 
 ```Bash
 python ./solve.py <ścieżka do pliku z instancją> [algorytm]
@@ -50,7 +50,7 @@ W przypadku podania niewłaściwych argumentów wyświetlenie informacji o błę
 
 ### Uruchamianie algorytmu na folderze z instancjami
 
-Do uruchomienia algorytmu dla folderu z instancjami służy komenda wywowała w folderze projektu:
+Do uruchomienia algorytmu dla folderu z instancjami służy komenda wywołana w folderze projektu:
 
 ```Bash
 python ./solve_dir.py <ścieżka do folderu z instancjami> [algorytm]
