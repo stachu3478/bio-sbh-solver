@@ -14,7 +14,6 @@ class Ant(GreedyLeastWeight):
       self.ant_count = 1000
       self.feromon_half_vapor_time = 0.375
       self.min_feromon = 0.000001 # 0.00001
-      self.max_feromon = 10000.0
       self.starvation_cycles = 10 # 5
 
       self.vertex_degree_weight = 1.0
@@ -44,7 +43,7 @@ class Ant(GreedyLeastWeight):
     self.best_path = spectrum_order
     self.feromon = self.error_dependent.create_feromon_table(self.spectrum)
    
-    # print('Found greedy quality: ' + str(self.max_quality))
+    print('Found greedy quality: ' + str(self.max_quality))
     self.apply_feromon(spectrum_order, self.quality_to_applied_feromon(self.quality(spectrum_order)))
     while self.starvation_level < self.starvation_cycles:
         self.cycle()
@@ -55,15 +54,10 @@ class Ant(GreedyLeastWeight):
 
 
   def quality(self, spectrum_order):
-    vertex_degree_quality = self.vertex_degree_weight * float(sum(map(lambda iw: self.get_degree(iw[0]), spectrum_order))) / float(self.error_dependent.max_total_vertex_degree())
+    vertex_degree_quality = self.vertex_degree_weight * float(sum(map(lambda iw: self.error_dependent.get_degree(iw[0]), spectrum_order))) / float(self.error_dependent.max_total_vertex_degree())
     chain_length_quality = self.chain_length_weight * float(len(spectrum_order)) / float(self.n - self.k + 1)
     unique_vertex_quality = self.unique_vertex_weight * float(len(set(spectrum_order))) / float(self.n - self.k + 1)
     return (vertex_degree_quality + chain_length_quality + unique_vertex_quality) / (self.vertex_degree_weight + self.chain_length_weight + self.unique_vertex_weight)
-
-  def get_degree(self, i):
-    if self.has_negative_errors():
-      return self.graph.get_degree(i)
-    return self.graph.get_degree_by_weight(i, 1)
 
   def cycle(self):
     self.starvation_level += 1
@@ -78,12 +72,10 @@ class Ant(GreedyLeastWeight):
       quality = self.quality(spectrum_order)
       # print(spectrum_order)
       # print('Quality: ' + str(quality))
-      if quality >= self.max_quality:
-        self.apply_feromon(spectrum_order, self.quality_to_applied_feromon(quality))
       if quality > self.max_quality:
           self.max_quality = quality
           self.best_path = spectrum_order
-          
+          self.apply_feromon(spectrum_order, self.quality_to_applied_feromon(quality))
           self.starvation_level = 0
           
           # print('Found better quality: ' + str(quality))
@@ -121,7 +113,7 @@ class Ant(GreedyLeastWeight):
         row = self.error_dependent.feromon_index_random_weight_list[current_vertex]
         next_spectrum_indexes_row = self.error_dependent.feromon_lists_index[current_vertex][spectrum_index_weight[1]]
         next_spectrum_index = next_spectrum_indexes_row[spectrum_index_weight[0]]
-        row[next_spectrum_index] = min(row[next_spectrum_index] + value, self.max_feromon)
+        row[next_spectrum_index] = row[next_spectrum_index] + value
         current_vertex = spectrum_index_weight[0]
 
   def vaporate_feromon(self):

@@ -16,6 +16,5 @@ class NonNegativeErrorDependent(ErrorDependent):
             lists_indexes[1][j] = index
         return index_weights, index_random_weights, lists_indexes
 
-    def assign_feromon_row(self, row, next_vertices_matrix):
-        for _, j in enumerate(next_vertices_matrix[1]):
-            row[j] = self.min_feromon
+    def get_degree(self, vertex_id):
+        return self.graph.get_degree_by_weight(vertex_id, 1)

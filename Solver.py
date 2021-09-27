@@ -75,4 +75,4 @@ class Solver:
     elif name == 'Ant':
         return Ant
     else:
-        raise RuntimeError('Algorithm not found')
+        raise RuntimeError('Algorithm not found: "' + name + '". Available algorithms are: "Greedy" alias "GreedyLeastWeight" (default), "GreedyHighestWeight", "GreedyRandomWeight", "Ant".')

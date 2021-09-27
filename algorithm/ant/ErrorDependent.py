@@ -28,3 +28,6 @@ class ErrorDependent:
     
     def feromon_index_lists_rows(self, next_vertices_matrix):
         raise NotImplementedError("Abstract class!")
+
+    def get_degree(self, vertex_id):
+        raise NotImplementedError("Abstract class!")
